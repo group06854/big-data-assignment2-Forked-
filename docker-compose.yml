@@ -40,14 +40,13 @@ services:
   #   hostname: cluster-slave-2
   #   tty: true
   cassandra-server:
-    image: cassandra
+    image: scylladb/scylla:5.2
     container_name: cassandra-server
     ports:
-      - "7000:7000"
+      - "9042:9042"
     networks:
       - spark-cluster
-    
-
+    hostname: cassandra-server
 networks:
   spark-cluster:
     driver: bridge

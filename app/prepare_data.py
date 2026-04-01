@@ -1,19 +1,20 @@
 from pathvalidate import sanitize_filename
 from tqdm import tqdm
 from pyspark.sql import SparkSession
-
+import os
 
 spark = SparkSession.builder \
     .appName('data preparation') \
     .master("local") \
     .config("spark.sql.parquet.enableVectorizedReader", "true") \
+    .config("spark.sql.parquet.columnarReaderBatchSize", "1024")\
     .getOrCreate()
 
 
-df = spark.read.parquet("/a.parquet")
+df = spark.read.parquet("/a.parquet").limit(110000)
 n = 1000
 df = df.select(['id', 'title', 'text']).sample(fraction=100 * n / df.count(), seed=0).limit(n)
-
+os.makedirs("data", exist_ok=True)
 
 def create_doc(row):
     filename = "data/" + sanitize_filename(str(row['id']) + "_" + row['title']).replace(" ", "_") + ".txt"
@@ -22,6 +23,5 @@ def create_doc(row):
 
 
 df.foreach(create_doc)
-
 
 # df.write.csv("/index/data", sep = "\t")

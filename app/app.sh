@@ -14,10 +14,9 @@ pip install -r requirements.txt
 
 # Package the virtual env.
 venv-pack -o .venv.tar.gz
-
+hdfs dfs -put .venv.tar.gz /user/root/
 # Collect data
 bash prepare_data.sh
-
 
 # Run the indexer
 bash index.sh
