@@ -4,7 +4,7 @@ import sys, re, math
 def tokenize(q):
     return re.sub(r'[^\w\s]', ' ', q.lower()).split()
 
-def bm25(tf, df, dl, avgdl, N, k1=1.2, b=0.75):
+def bm25(tf, df, dl, avgdl, N, k1=1, b=0.75):
     idf = math.log((N - df + 0.5) / (df + 0.5) + 1)
     return idf * (tf * (k1 + 1)) / (tf + k1 * (1 - b + b * dl / avgdl))
 
